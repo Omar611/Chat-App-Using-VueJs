@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import auth from 'firebase/auth'
+import auth from "firebase/auth";
 export default {
     name: "login",
     methods: {
@@ -31,7 +31,12 @@ export default {
             firebase
                 .auth()
                 .signInWithPopup(new firebase.auth.GoogleAuthProvider())
-                .then((res) => console.log(res))
+                .then((res) => {
+                    this.$store.dispatch("setUser", res.user);
+                })
+                .then(() => {
+                    this.$router.push("/");
+                })
                 .catch((err) => console.log(err));
         },
     },
