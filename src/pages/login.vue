@@ -4,6 +4,12 @@
             <h2 class="lead display-4">#Slack with VueJs#</h2>
             <p>Realtime communication at it's best</p>
         </div>
+        <div class="alert alert-info" role="alert" v-if="loading">
+          <strong>Processing....</strong>
+        </div>
+        <div class="alert alert-danger" role="alert" v-if="hasErrors">
+          <strong v-for="error in errors" :key="error">{{error}}</strong>
+        </div>
         <div class="container-fluid">
             <div class="row mt-5">
                 <div class="col text-center">
@@ -26,18 +32,32 @@
 import auth from "firebase/auth";
 export default {
     name: "login",
+    data() {
+        return {
+            errors: [],
+            loading: false,
+        };
+    },
+    computed: {
+      hasErrors(){
+        return this.errors.length > 0;
+      }
+    },
     methods: {
         loginwithGoogle() {
+            this.loading = true;
+            this.errors = [];
             firebase
                 .auth()
                 .signInWithPopup(new firebase.auth.GoogleAuthProvider())
                 .then((res) => {
                     this.$store.dispatch("setUser", res.user);
                 })
-                .then(() => {
-                    this.$router.push("/");
-                })
-                .catch((err) => console.log(err));
+                .then(() => this.$router.push("/"))
+                .catch((err) => {
+                    this.errors.push(err.message);
+                    this.loading = false;
+                });
         },
     },
 };
