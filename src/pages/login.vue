@@ -5,10 +5,10 @@
             <p>Realtime communication at it's best</p>
         </div>
         <div class="alert alert-info" role="alert" v-if="loading">
-          <strong>Processing....</strong>
+            <strong>Processing....</strong>
         </div>
         <div class="alert alert-danger" role="alert" v-if="hasErrors">
-          <strong v-for="error in errors" :key="error">{{error}}</strong>
+            <strong v-for="error in errors" :key="error">{{ error }}</strong>
         </div>
         <div class="container-fluid">
             <div class="row mt-5">
@@ -19,8 +19,11 @@
                     >
                         Login with Google
                     </button>
-                    <button class="btn btn-outline-info btn-lg mx-2">
-                        Login with Twitter
+                    <button
+                        class="btn btn-outline-info btn-lg mx-2"
+                        @click="loginwithGithub"
+                    >
+                        Login with GitHub
                     </button>
                 </div>
             </div>
@@ -39,9 +42,9 @@ export default {
         };
     },
     computed: {
-      hasErrors(){
-        return this.errors.length > 0;
-      }
+        hasErrors() {
+            return this.errors.length > 0;
+        },
     },
     methods: {
         loginwithGoogle() {
@@ -50,6 +53,21 @@ export default {
             firebase
                 .auth()
                 .signInWithPopup(new firebase.auth.GoogleAuthProvider())
+                .then((res) => {
+                    this.$store.dispatch("setUser", res.user);
+                })
+                .then(() => this.$router.push("/"))
+                .catch((err) => {
+                    this.errors.push(err.message);
+                    this.loading = false;
+                });
+        },
+        loginwithGithub() {
+            this.loading = true;
+            this.errors = [];
+            firebase
+                .auth()
+                .signInWithPopup(new firebase.auth.GithubAuthProvider())
                 .then((res) => {
                     this.$store.dispatch("setUser", res.user);
                 })
