@@ -5,9 +5,11 @@ import App from './App';
 import router from './router';
 import firebase from 'firebase/app';
 import store from './store';
+import auth from "firebase/auth";
 
 Vue.config.productionTip = false;
 
+// Initialise firebase
 var firebaseConfig = {
   apiKey: "AIzaSyB0Pe6xU7axubg3y0lijR1r0fBH1Kn5k5U",
   authDomain: "slack-with-vuejs.firebaseapp.com",
@@ -20,7 +22,29 @@ firebase.initializeApp(firebaseConfig);
 
 window.firebase = firebase;
 
-/* eslint-disable no-new */
+/* // Store the user data
+const unsubscribe = firebase.auth().onAuthStateChanged(user => {
+  store.dispatch("setUser", user);
+
+  new Vue({
+    el: '#app',
+    router,
+    store,
+    components: { App },
+    template: '<App/>'
+  });
+
+  // recursion -this function calls itsef on auth state change
+  unsubscribe()
+});
+ */
+
+// Store the user data
+firebase.auth().onAuthStateChanged(user => {
+  store.dispatch("setUser", user);
+});
+
+
 new Vue({
   el: '#app',
   router,
