@@ -22,7 +22,7 @@ firebase.initializeApp(firebaseConfig);
 
 window.firebase = firebase;
 
-/* // Store the user data
+// Store the user data
 const unsubscribe = firebase.auth().onAuthStateChanged(user => {
   store.dispatch("setUser", user);
 
@@ -36,19 +36,4 @@ const unsubscribe = firebase.auth().onAuthStateChanged(user => {
 
   // recursion -this function calls itsef on auth state change
   unsubscribe()
-});
- */
-
-// Store the user data
-firebase.auth().onAuthStateChanged(user => {
-  store.dispatch("setUser", user);
-});
-
-
-new Vue({
-  el: '#app',
-  router,
-  store,
-  components: { App },
-  template: '<App/>'
 });
