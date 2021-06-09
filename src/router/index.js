@@ -26,10 +26,10 @@ export default new Router({
       name: 'login',
       component: login,
       beforeEnter(to, from, next) {
-        if (firebase.auth().currentUser) {
-          next('/');
-        } else {
+        if (!firebase.auth().currentUser) {
           next();
+        } else {
+          next('/');
         }
       }
     },

@@ -33,12 +33,14 @@
 
 <script>
 import auth from "firebase/auth";
+import database from "firebase/database";
 export default {
     name: "login",
     data() {
         return {
             errors: [],
             loading: false,
+            usersRef: firebase.database().ref("users"),
         };
     },
     computed: {
@@ -54,6 +56,7 @@ export default {
                 .auth()
                 .signInWithPopup(new firebase.auth.GoogleAuthProvider())
                 .then((res) => {
+                    this.saveUserToUsersRef(res.user);
                     this.$store.dispatch("setUser", res.user);
                 })
                 .then(() => this.$router.push("/"))
@@ -69,6 +72,7 @@ export default {
                 .auth()
                 .signInWithPopup(new firebase.auth.GithubAuthProvider())
                 .then((res) => {
+                    this.saveUserToUsersRef(res.user);
                     this.$store.dispatch("setUser", res.user);
                 })
                 .then(() => this.$router.push("/"))
@@ -76,6 +80,12 @@ export default {
                     this.errors.push(err.message);
                     this.loading = false;
                 });
+        },
+        saveUserToUsersRef(user) {
+            return this.usersRef.child(user.uid).set({
+                name: user.displayName,
+                avatar: user.photoURL,
+            });
         },
     },
 };

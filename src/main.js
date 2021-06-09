@@ -5,7 +5,7 @@ import App from './App';
 import router from './router';
 import firebase from 'firebase/app';
 import store from './store';
-import auth from "firebase/auth";
+import functions from "firebase/functions";
 
 Vue.config.productionTip = false;
 
@@ -16,8 +16,10 @@ var firebaseConfig = {
   projectId: "slack-with-vuejs",
   storageBucket: "slack-with-vuejs.appspot.com",
   messagingSenderId: "1062602155241",
-  appId: "1:1062602155241:web:fe035db9ae9a4d3f193c78"
+  appId: "1:1062602155241:web:fe035db9ae9a4d3f193c78",
+  databaseURL: "https://slack-with-vuejs-default-rtdb.europe-west1.firebasedatabase.app/",
 };
+
 firebase.initializeApp(firebaseConfig);
 
 window.firebase = firebase;
