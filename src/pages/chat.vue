@@ -12,8 +12,7 @@
 </template>
 
 <script>
-import sidebar from "@/sidebar/sidebar";
-import Sidebar from '../sidebar/sidebar.vue';
+import sidebar from "@/sidebar/Sidebar";
 
 export default {
     name: "chat",

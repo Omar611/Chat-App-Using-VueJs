@@ -23,12 +23,14 @@
             </button>
         </div>
         <hr class="bg-light m-4" />
+        <channels />
     </div>
 </template>
 
 <script>
 import auth from "firebase/auth";
 import { mapGetters } from "vuex";
+import channels from "@/sidebar/Channels";
 
 export default {
     name: "sidebar",
@@ -43,6 +45,9 @@ export default {
                 this.$router.push("/login");
             }, 100);
         },
+    },
+    components: {
+        channels,
     },
 };
 </script>
