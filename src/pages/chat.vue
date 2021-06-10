@@ -3,9 +3,11 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-3 p-4 sidebar">
-                    <sidebar/>
+                    <sidebar />
                 </div>
-                <div class="col-md-9 content">Content</div>
+                <div class="col-md-9 content">
+                    <messages />
+                </div>
             </div>
         </div>
     </div>
@@ -13,13 +15,15 @@
 
 <script>
 import sidebar from "@/sidebar/Sidebar";
+import messages from "@/messages/Messages";
 
 export default {
     name: "chat",
     methods: {},
     components: {
-      sidebar,
-    }
+        sidebar,
+        messages,
+    },
 };
 </script>
 
