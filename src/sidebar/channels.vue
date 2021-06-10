@@ -149,14 +149,16 @@ export default {
                 .catch((err) => this.errors.push(err.message));
         },
         addListeners() {
+            let i = 0;
             this.channelsRef.on("child_added", (snapshot) => {
                 this.channels.push(snapshot.val());
-                if (this.channels.length > 0) {
+                if (this.channels.length > 0 && i == 0) {
                     this.currentChannel = this.channels[0];
                     this.$store.dispatch(
                         "setCurrentChannel",
                         this.currentChannel
                     );
+                    i ++;
                 }
             });
         },
@@ -168,7 +170,7 @@ export default {
         },
         changeChannel(channel) {
             this.currentChannel = channel;
-            this.$store.dispatch("setCurrentChannel", this.cuurentChannel);
+            this.$store.dispatch("setCurrentChannel", this.currentChannel);
         },
     },
     mounted() {
