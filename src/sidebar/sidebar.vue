@@ -14,11 +14,9 @@
                 >Company name</a
             > -->
             <div
-                class="navbar-brand col-md-3 col-lg-2 mr-0 px-4 hide-on-desktop "
+                class="navbar-brand col-md-3 col-lg-2 mr-0 px-4 hide-on-desktop"
             >
-                <h2 class="text-light text-right">
-                    #Slack with VueJs#
-                </h2>
+                <h2 class="text-light text-right">#Slack with VueJs#</h2>
             </div>
             <button
                 class="
@@ -79,6 +77,7 @@
 
 <script>
 import auth from "firebase/auth";
+import database from "firebase/database";
 import { mapGetters } from "vuex";
 import channels from "@/sidebar/Channels";
 import users from "@/sidebar/Users";
@@ -88,9 +87,15 @@ export default {
     computed: {
         ...mapGetters(["getCurrentUser"]),
     },
+    data() {
+        return {
+            presenceRef: firebase.database().ref("presence"),
+        };
+    },
     methods: {
         logout() {
             firebase.auth().signOut();
+            this.presenceRef.child(this.getCurrentUser.uid).remove();
             this.$store.dispatch("setUser", null);
             setTimeout(() => {
                 this.$router.push("/login");

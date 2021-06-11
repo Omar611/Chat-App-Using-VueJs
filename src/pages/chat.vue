@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="container-fluid">
-            <div class="row">
+            <div class="row" v-if="$store.state.currentUser">
                 <div class="col-md-3 p-0">
                     <sidebar />
                 </div>

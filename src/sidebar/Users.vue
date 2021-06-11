@@ -16,9 +16,14 @@
                         border-bottom
                     "
                 >
-                  <span>
-                    <img :src="user.avatar" height="50px" class="rounded-circle" alt="avatar">
-                  </span>
+                    <span>
+                        <img
+                            :src="user.avatar"
+                            height="50px"
+                            class="rounded-circle"
+                            alt="avatar"
+                        />
+                    </span>
                     <h5 class="ml-2">{{ user.name }}</h5>
                 </a>
             </div>
@@ -36,6 +41,8 @@ export default {
         return {
             users: [],
             usersRef: firebase.database().ref("users"),
+            connectedRef: firebase.database().ref(".info/connected"),
+            presenceRef: firebase.database().ref("presence"),
         };
     },
     computed: {
@@ -52,6 +59,15 @@ export default {
                     this.users.push(user);
                 }
             });
+
+            // Return connected for each connected user
+            this.connectedRef.on("value", (snapshot) => {
+                if (snapshot.val() === true) {
+                    let ref = this.presenceRef.child(this.getCurrentUser.uid);
+                    ref.set(true);
+                    ref.onDisconnect().remove();
+                }
+            });
         },
         detachLinstners() {},
     },
@@ -59,7 +75,7 @@ export default {
         this.addLinstners();
     },
     beforeDestroy() {
-        this.detachListeners();
+        this.detachLinstners();
     },
 };
 </script>

@@ -24,6 +24,9 @@ firebase.initializeApp(firebaseConfig);
 
 window.firebase = firebase;
 
+console.log('%cWelcome Fellow Developer 🔥', 'color:#f2f2f2; font-size:22px; font-weight:900; background: #42474C; padding: 8px');
+
+
 // Store the user data
 const unsubscribe = firebase.auth().onAuthStateChanged(user => {
   store.dispatch("setUser", user);
