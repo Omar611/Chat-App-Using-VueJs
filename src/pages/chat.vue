@@ -2,7 +2,7 @@
     <div>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-3 p-4 sidebar">
+                <div class="col-md-3 p-0">
                     <sidebar />
                 </div>
                 <div class="col-md-9 content">
@@ -27,10 +27,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.sidebar {
-    height: 100vh;
-    background-color: #1d1c1d;
-    overflow: auto;
-}
-</style>
