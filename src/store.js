@@ -8,18 +8,18 @@ const state = {
   cuurentChannel: null,
 }
 const mutations = {
-  SET_USER(state, user){
+  SET_USER(state, user) {
     state.currentUser = user
   },
-  SET_CUURENT_CHANNEL(state, channel){
+  SET_CUURENT_CHANNEL(state, channel) {
     state.cuurentChannel = channel
   }
 }
 const actions = {
-  setUser({commit}, user){
+  setUser({ commit }, user) {
     commit('SET_USER', user)
   },
-  setCurrentChannel({commit}, channel) {
+  setCurrentChannel({ commit }, channel) {
     commit('SET_CUURENT_CHANNEL', channel);
   }
 
