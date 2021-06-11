@@ -12,9 +12,10 @@
                         d-block
                         text-decoration-none
                         d-flex
-                        align-items-center
+                        align-items-baseline
                         border-bottom
                     "
+                    href="#"
                 >
                     <span>
                         <img
@@ -25,6 +26,8 @@
                         />
                     </span>
                     <h5 class="ml-2">{{ user.name }}</h5>
+                    <span class="online" v-if="isonline(user)"></span>
+                    <span class="offline" v-else></span>
                 </a>
             </div>
         </div>
@@ -60,6 +63,21 @@ export default {
                 }
             });
 
+            // presenceRef child added
+            this.presenceRef.on("child_added", (snapshot) => {
+                if (this.getCurrentUser.uid !== snapshot.key) {
+                    //  Pass to user status method
+                    this.addStatusToUser(snapshot.key);
+                }
+            });
+
+            // presenceRef child removed
+            this.presenceRef.on("child_removed", (snapshot) => {
+                if (this.getCurrentUser.uid !== snapshot.key) {
+                    //  Pass to user status method
+                    this.addStatusToUser(snapshot.key, false);
+                }
+            });
             // Return connected for each connected user
             this.connectedRef.on("value", (snapshot) => {
                 if (snapshot.val() === true) {
@@ -69,7 +87,24 @@ export default {
                 }
             });
         },
-        detachLinstners() {},
+        addStatusToUser(userId, connected = true) {
+            const index = this.users.findIndex((user) => user.uid === userId);
+            if (index !== -1) {
+                console.log(index);
+                connected == true
+                    ? (this.users[index].status = "online")
+                    : (this.users[index].status = "offline");
+            }
+            console.log(this.users);
+        },
+        isonline(user) {
+            return user.status === "online";
+        },
+        detachLinstners() {
+            this.usersRef.off();
+            this.presenceRef.off();
+            this.connectedRef.off();
+        },
     },
     mounted() {
         this.addLinstners();
@@ -79,3 +114,20 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.online {
+    height: 12px;
+    width: 12px;
+    background-color: rgb(59, 187, 59);
+    border-radius: 50%;
+    margin-left: auto;
+}
+.offline {
+    height: 12px;
+    width: 12px;
+    background-color: rgb(235, 59, 59);
+    border-radius: 50%;
+    margin-left: auto;
+}
+</style>
