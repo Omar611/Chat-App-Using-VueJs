@@ -40,14 +40,14 @@
             </button>
         </nav>
         <nav id="sidebarMenu" class="d-md-block p-4 sidebar collapse" style="">
-            <div class="sidebar-sticky pt-3">
+            <div class="sidebar-sticky">
                 <h2 class="text-light text-center hide-on-mobile">
                     #Slack with VueJs#
                 </h2>
-                <p class="text-light text-center mb-5 hide-on-mobile">
+                <p class="text-light text-center mb-4 hide-on-mobile">
                     Realtime communication at it's best
                 </p>
-                <div class="text-center my-4">
+                <div class="text-center my-3">
                     <span>
                         <img
                             :src="getCurrentUser.photoURL"
@@ -109,6 +109,8 @@ export default {
     height: 100vh;
     background-color: #1d1c1d;
     overflow: auto;
+    position: relative;
+    z-index: 9999;
 }
 .hide-on-desktop {
     display: none;

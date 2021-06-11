@@ -60,7 +60,7 @@ export default {
 <style scoped>
 .messages-container {
     max-height: 100vh;
-    min-height: 97vh;
+    min-height: calc(100vh - 51px);
     position: relative;
 }
 </style>

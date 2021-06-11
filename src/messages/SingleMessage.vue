@@ -59,7 +59,6 @@ export default {
     left: 0;
     right: 0;
     max-height: 100%;
-    min-height: 97%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
