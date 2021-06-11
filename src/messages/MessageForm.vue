@@ -21,7 +21,7 @@
                             @click="sendMessage"
                             @keyup.16="sendMessage"
                         >
-                            &nbsp Send &nbsp
+                            &nbsp; Send &nbsp;
                         </button>
                     </div>
                     <div class="input-group-append">

@@ -126,7 +126,7 @@ export default {
         hasErrors() {
             return this.errors.length > 0;
         },
-        ...mapGetters(["cuurentChannel"]),
+        ...mapGetters(["getCurrentChannel"]),
     },
     methods: {
         addChannel() {
