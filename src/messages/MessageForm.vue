@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="messageForm">
-            <form v-on:submit.prevent="sendMessage">
+            <form @submit.prevent="sendMessage">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text mt-3">></span>
@@ -19,7 +19,6 @@
                             type="button"
                             class="btn btn-primary mt-3"
                             @click="sendMessage"
-                            @keyup.16="sendMessage"
                         >
                             &nbsp; Send &nbsp;
                         </button>
@@ -68,12 +67,21 @@ export default {
                     .push()
                     .set(newMessage)
                     .then(() => {
-                      this.message = '';
+                        this.message = "";
+                        this.$nextTick(() => {
+                            this.scrollToLastMessage();
+                        });
                     })
                     .catch((err) => {
                         this.errors = err;
                     });
             }
+        },
+        scrollToLastMessage() {
+            var innerContainer = document.querySelector(
+                ".inner-messages-container"
+            );
+            innerContainer.scrollTop = innerContainer.scrollHeight;
         },
     },
 };

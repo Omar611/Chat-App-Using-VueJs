@@ -11,9 +11,7 @@
                     />
                     <div class="media-body">
                         <h6 class="mt-0">
-                            <a href="javascript.void(0)">{{
-                                message.user.name
-                            }}</a>
+                            <a href="#">{{ message.user.name }}</a>
                             - {{ fromNow(message.timestamp) }}
                         </h6>
                         <p
@@ -22,6 +20,11 @@
                             }"
                         >
                             {{ message.content }}
+                            {{
+                                index == messages.length - 1
+                                    ? scrollToLastMessage()
+                                    : ""
+                            }}
                         </p>
                     </div>
                 </div>
@@ -48,6 +51,14 @@ export default {
         selfMessage(user) {
             return user.id === this.getCurrentUser.uid;
         },
+        scrollToLastMessage() {
+            setTimeout(() => {
+                var innerContainer = document.querySelector(
+                    ".inner-messages-container"
+                );
+                innerContainer.scrollTop = innerContainer.scrollHeight;
+            }, 500);
+        },
     },
 };
 </script>
@@ -63,18 +74,18 @@ export default {
     -webkit-overflow-scrolling: touch;
 }
 .inner-messages-container::-webkit-scrollbar-track {
-  border: 1px solid #000;
-  padding: 2px 0;
-  background-color: #404040;
+    border: 1px solid #000;
+    padding: 2px 0;
+    background-color: #404040;
 }
 .inner-messages-container::-webkit-scrollbar {
-  width: 10px;
+    width: 10px;
 }
 .inner-messages-container::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-  background-color: #737272;
-  border: 1px solid #000;
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #737272;
+    border: 1px solid #000;
 }
 .self-message {
     border-left: 5px solid red;
