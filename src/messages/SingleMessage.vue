@@ -2,7 +2,7 @@
     <div>
         <div class="inner-messages-container pt-5 px-3 mt-3">
             <div v-for="(message, index) in messages" :key="index">
-                <div class="media">
+                <div class="media mb-3 p-1 rounded">
                     <img
                         :src="message.user.avatar"
                         height="50"
@@ -11,10 +11,17 @@
                     />
                     <div class="media-body">
                         <h6 class="mt-0">
-                            <a href="#">{{ message.user.name }}</a>
+                            <a
+                                href="#"
+                                @click.prevent="changeChannel(message.user)"
+                                v-if="!selfMessage(message.user)"
+                                >{{ message.user.name }}</a
+                            >
+                            <p class="m-0 d-inline-block text-primary" v-else>{{ message.user.name }}</p>
                             - {{ fromNow(message.timestamp) }}
                         </h6>
                         <p
+                            class="m-0"
                             :class="{
                                 'self-message': selfMessage(message.user),
                             }"
@@ -46,6 +53,17 @@ export default {
         selfMessage(user) {
             return user.id === this.getCurrentUser.uid;
         },
+        getChannelID(userId) {
+            return userId < this.getCurrentUser.uid
+                ? userId + "/" + this.getCurrentUser.uid
+                : this.getCurrentUser.uid + "/" + userId;
+        },
+        changeChannel(user) {
+            const chanhelId = this.getChannelID(user.id);
+            const channel = { id: chanhelId, name: user.name };
+            this.$store.dispatch("setPrivate", true);
+            this.$store.dispatch("setCurrentChannel", channel);
+        },
     },
 };
 </script>
@@ -73,6 +91,9 @@ export default {
     box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
     background-color: #737272;
     border: 1px solid #000;
+}
+.media {
+    background: #fff;
 }
 .self-message {
     border-left: 5px solid red;

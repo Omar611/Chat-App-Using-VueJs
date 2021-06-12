@@ -6,19 +6,29 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text mt-3">></span>
                     </div>
-                    <input
+                    <!-- <input
                         type="text"
                         name="message"
                         id="message"
                         class="form-control mt-3"
                         placeholder="Don't be shy wirte something..."
                         v-model="message"
-                    />
+                    /> -->
+                    <textarea
+                        name="message"
+                        id="message"
+                        cols="15"
+                        rows="1"
+                        class="form-control mt-3 write-message"
+                        placeholder="Don't be shy wirte something..."
+                        v-model="message"
+                    ></textarea>
                     <div class="input-group-append">
                         <button
                             type="button"
                             class="btn btn-primary mt-3"
                             @click="sendMessage"
+                            @keyup.16="sendMessage"
                         >
                             &nbsp; Send &nbsp;
                         </button>
@@ -62,7 +72,8 @@ export default {
             };
             // Validation before pushing message
             if (this.getCurrentChannel !== null && this.message.length > 0) {
-                this.$parent.getMessagesRef()
+                this.$parent
+                    .getMessagesRef()
                     .child(this.getCurrentChannel.id)
                     .push()
                     .set(newMessage)
@@ -102,6 +113,9 @@ export default {
     button:active,
     button:focus {
         box-shadow: unset;
+    }
+    .write-message {
+        max-height: 38px;
     }
 }
 </style>

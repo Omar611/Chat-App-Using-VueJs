@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="container-fluid">
+        <div class="container-fluid bg-light">
             <div class="row" v-if="$store.state.currentUser">
                 <div class="col-md-3 p-0">
                     <sidebar />
@@ -30,5 +30,7 @@ export default {
 <style scoped>
 .content {
   padding: 0;
+  /* background-image: url('../assets/images/background.jpg'); */
 }
+
 </style>
