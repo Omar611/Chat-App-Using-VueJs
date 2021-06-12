@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="messages-container">
+            <h4 class="channel-name text-light text-center p-2">{{ channelName }}</h4>
             <single-message :messages="messages" />
             <message-form />
         </div>
@@ -22,34 +23,51 @@ export default {
     data() {
         return {
             messagesRef: firebase.database().ref("messages"),
+            privateMessagesRef: firebase.database().ref("privateMessages"),
             messages: [],
             channel: null,
+            listeners: [],
         };
     },
     computed: {
-        ...mapGetters(["getCurrentChannel"]),
+        ...mapGetters(["getCurrentChannel", "isPrivate"]),
+        channelName() {
+            if (this.channel !== null) {
+                return this.isPrivate
+                    ? "@ " + this.channel.name
+                    : "# " + this.channel.name;
+            }
+        },
     },
     watch: {
         getCurrentChannel: function () {
-            this.messages = [];
+            this.detachLinstners();
             this.addLinstners();
             this.channel = this.getCurrentChannel;
         },
     },
     methods: {
         addLinstners() {
-            this.messagesRef
-                .child(this.getCurrentChannel.id)
-                .on("child_added", (snapshot) => {
-                    this.messages.push(snapshot.val());
+            const ref = this.getMessagesRef();
+            ref.child(this.getCurrentChannel.id).on(
+                "child_added",
+                (snapshot) => {
+                    let message = snapshot.val();
+                    message["id"] = snapshot.key;
+                    this.messages.push(message);
                     this.$nextTick(() => {
                         this.scrollToLastMessage();
                     });
-                });
+                }
+            );
+            this.addToListeners(this.getCurrentChannel.id, ref, "child_added");
         },
-        detachLinstners() {
-            if (this.channel !== null) {
-                this.messagesRef.child(this.channel.id).off();
+        addToListeners(id, ref, event) {
+            const index = this.listeners.findIndex((el) => {
+                return el.id === id && el.ref === ref && el.event === event;
+            });
+            if (index === -1) {
+                this.listeners.push({ id: id, ref: ref, event: event });
             }
         },
         scrollToLastMessage() {
@@ -57,6 +75,24 @@ export default {
                 ".inner-messages-container"
             );
             innerContainer.scrollTop = innerContainer.scrollHeight;
+        },
+        getMessagesRef() {
+            if (this.isPrivate) {
+                return this.privateMessagesRef;
+            } else {
+                return this.messagesRef;
+            }
+        },
+        detachLinstners() {
+            this.listeners.forEach((listerner) => {
+                listerner.ref.child(listerner.id).off(listerner.event);
+            });
+            this.listeners = [];
+            this.messages = [];
+            // if (this.channel !== null) {
+            //     const ref = this.getMessagesRef();
+            //     ref.child(this.channel.id).off();
+            // }
         },
     },
     beforeDestroy() {
@@ -70,5 +106,10 @@ export default {
     max-height: 100vh;
     min-height: calc(100vh - 51px);
     position: relative;
+}
+.channel-name {
+    background-color: #3f3e3f;
+    position: relative;
+    z-index: 999;
 }
 </style>

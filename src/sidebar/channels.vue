@@ -158,7 +158,7 @@ export default {
                         "setCurrentChannel",
                         this.currentChannel
                     );
-                    i ++;
+                    i++;
                 }
             });
         },
@@ -166,10 +166,11 @@ export default {
             this.channelsRef.off();
         },
         setActiveChannel(ch) {
-            return ch.id === this.currentChannel.id;
+            return ch.id === this.getCurrentChannel.id;
         },
         changeChannel(channel) {
             this.currentChannel = channel;
+            this.$store.dispatch("setPrivate", false);
             this.$store.dispatch("setCurrentChannel", this.currentChannel);
         },
     },

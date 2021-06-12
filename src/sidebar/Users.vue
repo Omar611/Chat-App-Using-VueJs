@@ -15,7 +15,9 @@
                         align-items-baseline
                         border-bottom
                     "
+                    :class="{ 'bg-light text-dark': isActive(user) }"
                     href="#"
+                    @click.prevent="changeChannel(user)"
                 >
                     <span>
                         <img
@@ -49,7 +51,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["getCurrentUser"]),
+        ...mapGetters(["getCurrentUser", "getCurrentChannel"]),
     },
     methods: {
         addLinstners() {
@@ -90,15 +92,28 @@ export default {
         addStatusToUser(userId, connected = true) {
             const index = this.users.findIndex((user) => user.uid === userId);
             if (index !== -1) {
-                console.log(index);
                 connected == true
                     ? (this.users[index].status = "online")
                     : (this.users[index].status = "offline");
             }
-            console.log(this.users);
         },
         isonline(user) {
             return user.status === "online";
+        },
+        getChannelID(userId) {
+            return userId < this.getCurrentUser.uid
+                ? userId + "/" + this.getCurrentUser.uid
+                : this.getCurrentUser.uid + "/" + userId;
+        },
+        changeChannel(user) {
+            const chanhelId = this.getChannelID(user.uid);
+            const channel = { id: chanhelId, name: user.name };
+            this.$store.dispatch("setPrivate", true);
+            this.$store.dispatch("setCurrentChannel", channel);
+        },
+        isActive(user) {
+            const channelId = this.getChannelID(user.uid);
+            return this.getCurrentChannel.id === channelId;
         },
         detachLinstners() {
             this.usersRef.off();

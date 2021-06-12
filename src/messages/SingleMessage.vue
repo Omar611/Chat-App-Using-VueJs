@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="inner-messages-container pt-5 mt-3">
+        <div class="inner-messages-container pt-5 px-3 mt-3">
             <div v-for="(message, index) in messages" :key="index">
                 <div class="media">
                     <img
@@ -53,10 +53,10 @@ export default {
 <style scoped>
 .inner-messages-container {
     position: absolute;
-    bottom: 0;
+    bottom: -20px;
     left: 0;
     right: 0;
-    max-height: 100%;
+    max-height: 95%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }

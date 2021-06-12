@@ -46,7 +46,7 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(["getCurrentUser", "getCurrentChannel"]),
+        ...mapGetters(["getCurrentUser", "getCurrentChannel", "isPrivate"]),
     },
     methods: {
         sendMessage() {
@@ -62,7 +62,7 @@ export default {
             };
             // Validation before pushing message
             if (this.getCurrentChannel !== null && this.message.length > 0) {
-                this.$parent.messagesRef
+                this.$parent.getMessagesRef()
                     .child(this.getCurrentChannel.id)
                     .push()
                     .set(newMessage)
