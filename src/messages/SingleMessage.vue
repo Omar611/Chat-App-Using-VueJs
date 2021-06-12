@@ -20,11 +20,6 @@
                             }"
                         >
                             {{ message.content }}
-                            {{
-                                index == messages.length - 1
-                                    ? scrollToLastMessage()
-                                    : ""
-                            }}
                         </p>
                     </div>
                 </div>
@@ -50,14 +45,6 @@ export default {
         },
         selfMessage(user) {
             return user.id === this.getCurrentUser.uid;
-        },
-        scrollToLastMessage() {
-            setTimeout(() => {
-                var innerContainer = document.querySelector(
-                    ".inner-messages-container"
-                );
-                innerContainer.scrollTop = innerContainer.scrollHeight;
-            }, 500);
         },
     },
 };

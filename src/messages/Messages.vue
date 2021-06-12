@@ -41,14 +41,22 @@ export default {
             this.messagesRef
                 .child(this.getCurrentChannel.id)
                 .on("child_added", (snapshot) => {
-                    console.log("message sent");
                     this.messages.push(snapshot.val());
+                    this.$nextTick(() => {
+                        this.scrollToLastMessage();
+                    });
                 });
         },
         detachLinstners() {
             if (this.channel !== null) {
                 this.messagesRef.child(this.channel.id).off();
             }
+        },
+        scrollToLastMessage() {
+            var innerContainer = document.querySelector(
+                ".inner-messages-container"
+            );
+            innerContainer.scrollTop = innerContainer.scrollHeight;
         },
     },
     beforeDestroy() {
