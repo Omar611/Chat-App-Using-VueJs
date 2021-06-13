@@ -7,7 +7,8 @@ import firebase from 'firebase/app';
 import store from './store';
 import functions from "firebase/functions";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'jquery/src/jquery.js';
+import jQuery from "jquery";
+import 'popper.js/dist/popper.min.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 
 Vue.config.productionTip = false;
@@ -26,6 +27,7 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 window.firebase = firebase;
+window.$ = window.jQuery = jQuery;
 
 console.log('%cWelcome Fellow Developer 🔥', 'color:#f2f2f2; font-size:22px; font-weight:900; background: #42474C; padding: 8px');
 
