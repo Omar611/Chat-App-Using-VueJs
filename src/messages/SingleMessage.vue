@@ -84,7 +84,7 @@ export default {
     background-color: #404040;
 }
 .inner-messages-container::-webkit-scrollbar {
-    width: 10px;
+    width: 15px;
 }
 .inner-messages-container::-webkit-scrollbar-thumb {
     border-radius: 10px;

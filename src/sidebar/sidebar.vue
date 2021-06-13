@@ -113,9 +113,23 @@ export default {
 .sidebar {
     height: 100vh;
     background-color: #1d1c1d;
-    overflow: auto;
+    overflow-y: auto;
     position: relative;
     z-index: 9999;
+}
+.sidebar::-webkit-scrollbar-track {
+    border: 1px solid #000;
+    padding: 2px 0;
+    background-color: #404040;
+}
+.sidebar::-webkit-scrollbar {
+    width: 12px;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #737272;
+    border: 1px solid #000;
 }
 .hide-on-desktop {
     display: none;

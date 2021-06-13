@@ -54,6 +54,7 @@
                                     <input
                                         type="text"
                                         class="form-control"
+                                        placeholder="Search Emojis"
                                         v-model="search"
                                     />
                                 </div>
@@ -65,8 +66,8 @@
                                         <h5
                                             class="
                                                 my-2
-                                                text-dark
-                                                font-weight-bold
+                                                text-light
+                                                font-weight-bolder
                                             "
                                         >
                                             {{ category }}
@@ -164,9 +165,7 @@ export default {
             }
         },
         scrollToLastMessage() {
-            var innerContainer = document.querySelector(
-                ".inner-messages-container"
-            );
+            var innerContainer = document.querySelector(".emoji-picker");
             innerContainer.scrollTop = innerContainer.scrollHeight;
         },
         insert(emoji) {
@@ -212,18 +211,35 @@ svg.emoji-btn {
     border: 1px solid #ccc;
     width: 14rem;
     height: 20rem;
-    overflow: scroll;
+    overflow-y: scroll;
     padding: 1rem;
     box-sizing: border-box;
     border-radius: 0.5rem;
-    background: #fff;
+    background: #3f3e3f;
     box-shadow: 1px 1px 8px #c7dbe6;
     bottom: 37px;
     right: 77px;
 }
+.emoji-picker::-webkit-scrollbar-track {
+    border: 1px solid #000;
+    padding: 2px 0;
+    background-color: #404040;
+}
+.emoji-picker::-webkit-scrollbar {
+    width: 10px;
+}
+.emoji-picker::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #737272;
+    border: 1px solid #000;
+}
 
 .emoji-picker span {
     cursor: pointer;
+}
+.emoji-picker input {
+    height: 33px;
 }
 
 .emoji-picker__search {
