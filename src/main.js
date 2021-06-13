@@ -6,6 +6,9 @@ import router from './router';
 import firebase from 'firebase/app';
 import store from './store';
 import functions from "firebase/functions";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'jquery/src/jquery.js';
+import 'bootstrap/dist/js/bootstrap.min.js';
 
 Vue.config.productionTip = false;
 

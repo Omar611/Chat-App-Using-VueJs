@@ -114,8 +114,8 @@ export default {
     button:focus {
         box-shadow: unset;
     }
-    .write-message {
-        max-height: 38px;
+    .write-message{
+      max-height: 38px;
     }
 }
 </style>
