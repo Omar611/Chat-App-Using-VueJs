@@ -22,6 +22,8 @@
                         class="form-control mt-3 write-message"
                         placeholder="Don't be shy wirte something..."
                         v-model="message"
+                        @keydown.enter.exact.prevent
+                        @keyup.enter.exact="sendMessage"
                     ></textarea>
                     <emoji-picker @emoji="insert" :search="search">
                         <div
@@ -217,7 +219,7 @@ svg.emoji-btn {
     background: #fff;
     box-shadow: 1px 1px 8px #c7dbe6;
     bottom: 37px;
-    right: 157px;
+    right: 77px;
 }
 
 .emoji-picker span {
