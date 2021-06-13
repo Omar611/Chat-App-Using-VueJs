@@ -6,14 +6,6 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text mt-3">></span>
                     </div>
-                    <!-- <input
-                        type="text"
-                        name="message"
-                        id="message"
-                        class="form-control mt-3"
-                        placeholder="Don't be shy wirte something..."
-                        v-model="message"
-                    /> -->
                     <textarea
                         name="message"
                         id="message"
@@ -105,19 +97,27 @@
                         </button>
                     </div>
                     <div class="input-group-append">
-                        <button type="button" class="btn btn-warning mt-3">
+                        <button
+                            type="button"
+                            class="btn btn-warning mt-3"
+                            data-toggle="fileUploadModal"
+                            data-target="#fileUploadModal"
+                            @click.prevent="openFileUploadModal"
+                        >
                             Upload
                         </button>
                     </div>
                 </div>
             </form>
         </div>
+        <file-modal />
     </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import EmojiPicker from "vue-emoji-picker";
+import FileModal from "./FileModal";
 
 export default {
     name: "message-form",
@@ -130,6 +130,7 @@ export default {
     },
     components: {
         EmojiPicker,
+        FileModal,
     },
     computed: {
         ...mapGetters(["getCurrentUser", "getCurrentChannel", "isPrivate"]),
@@ -170,6 +171,9 @@ export default {
         },
         insert(emoji) {
             this.message += emoji;
+        },
+        openFileUploadModal() {
+            $("#fileUploadModal").modal("show");
         },
     },
 };

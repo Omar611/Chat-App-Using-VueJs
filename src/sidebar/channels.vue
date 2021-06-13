@@ -133,11 +133,16 @@ export default {
             this.errors = [];
             // Get key to the newly created channel
             const key = this.channelsRef.push().key;
+            if (!this.new_channel) {
+                this.errors.push("Channel name is required");
+                return;
+            }
             // Create new channel
             const newChannel = {
                 id: key,
                 name: this.new_channel,
             };
+            this.new_channel;
             // Push the channel to firebase
             this.channelsRef
                 .child(key)
@@ -146,7 +151,7 @@ export default {
                     this.new_channel = "";
                     $("#channelModal").modal("hide");
                 })
-                .catch((err) => this.errors.push(err.message));
+                // .catch((err) => this.errors.push(err.message));
         },
         addListeners() {
             let i = 0;
