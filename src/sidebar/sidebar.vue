@@ -33,12 +33,13 @@
                 aria-controls="sidebarMenu"
                 aria-expanded="false"
                 aria-label="Toggle navigation"
+                @click="toggleContent"
             >
                 <span class="navbar-toggler-icon"></span>
             </button>
         </nav>
-        <nav id="sidebarMenu" class="d-md-block p-4 sidebar collapse" style="">
-            <div class="sidebar-sticky">
+        <nav id="sidebarMenu" class="d-md-block sidebar collapse" style="">
+            <div class="sidebar-sticky p-4">
                 <h2 class="text-light text-center hide-on-mobile">
                     #Slack with VueJs#
                 </h2>
@@ -101,6 +102,9 @@ export default {
                 this.$router.push("/login");
             }, 100);
         },
+        toggleContent() {
+            $(".content").toggle();
+        },
     },
     components: {
         channels,
@@ -143,6 +147,12 @@ export default {
     }
     .hide-on-mobile {
         display: none;
+    }
+    .sidebar {
+        height: 100%;
+    }
+    .navbar-brand {
+        padding: 1px 10px;
     }
 }
 </style>

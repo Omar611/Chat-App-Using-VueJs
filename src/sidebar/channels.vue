@@ -1,32 +1,23 @@
 <template>
     <div>
-        <div class="d-flex justify-content-center align-items-centerr mb-4">
-            <h3 class="text-light m-2 border-bottom">Channels</h3>
+        <div
+            class="
+                channels-header
+                d-flex
+                justify-content-center
+                align-items-centerr
+                flex-column
+                mb-4
+            "
+        >
+            <h3 class="channels-title text-center text-light my-2">Channels</h3>
             <button
-                class="btn btn-outline-light m-2"
+                class="btn btn-outline-light my-2"
                 data-toggle="modal"
                 data-target="#channelModal"
             >
                 Add Channel
             </button>
-        </div>
-        <div v-if="hasErrors">
-            <div
-                class="alert alert-danger alert-dismissible fade show"
-                role="alert"
-                v-for="error in errors"
-                :key="error"
-            >
-                <strong>{{ error }}</strong>
-                <button
-                    type="button"
-                    class="close"
-                    data-dismiss="alert"
-                    aria-label="Close"
-                >
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
         </div>
         <!-- Modal -->
         <div
@@ -51,9 +42,8 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-
                     <div class="modal-body">
-                        <form>
+                        <form @submit.prevent="addChannel">
                             <div class="form-group">
                                 <input
                                     type="text"
@@ -65,6 +55,28 @@
                                 />
                             </div>
                         </form>
+                        <div v-if="hasErrors">
+                            <div
+                                class="
+                                    alert alert-danger alert-dismissible
+                                    fade
+                                    show
+                                "
+                                role="alert"
+                                v-for="error in errors"
+                                :key="error"
+                            >
+                                <strong>{{ error }}</strong>
+                                <button
+                                    type="button"
+                                    class="close"
+                                    data-dismiss="alert"
+                                    aria-label="Close"
+                                >
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -150,8 +162,8 @@ export default {
                 .then((res) => {
                     this.new_channel = "";
                     $("#channelModal").modal("hide");
-                })
-                // .catch((err) => this.errors.push(err.message));
+                });
+            // .catch((err) => this.errors.push(err.message));
         },
         addListeners() {
             let i = 0;
@@ -198,4 +210,12 @@ export default {
 .channels-list > div:last-child > a {
     border-radius: 0 0 5px 5px;
 }
+/* @media (max-width: 1024px) {
+    .channels-header {
+        flex-direction: column;
+    }
+    .channels-title {
+      text-align: center;
+    }
+} */
 </style>

@@ -11,7 +11,7 @@
                     {{ uploadLabel }}
                 </div>
             </div>
-            <form @submit.prevent="sendMessage">
+            <form class="messaging-form" @submit.prevent="sendMessage">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">></span>
@@ -410,6 +410,9 @@ svg.emoji-btn {
 }
 .progress-bar {
     height: 100%;
+}
+.messaging-form {
+  max-width: 100%;
 }
 @media (min-width: 768px) {
     .messageForm {

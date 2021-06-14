@@ -37,8 +37,7 @@
                             :class="{
                                 'self-message': selfMessage(message.user),
                             }"
-                            class="img img-responsive pl-2"
-                            height="200px"
+                            class="img img-responsive chat-img pl-2"
                             alt="image"
                         />
                     </div>
@@ -116,9 +115,19 @@ export default {
     padding-left: 7px;
     color: green;
 }
+.chat-img {
+    height: 300px;
+    width: auto;
+    max-width: 100%;
+}
 @media (max-width: 767px) {
     .inner-messages-container {
         bottom: 30px;
+    }
+    .chat-img {
+        height: auto;
+        width: auto;
+        max-width: 100%;
     }
 }
 </style>

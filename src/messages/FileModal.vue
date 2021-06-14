@@ -130,7 +130,7 @@ export default {
                     );
                 }
             } else {
-                this.$emit("addError", "File must be jpeg or png and 1mb max");
+                this.$emit("addError", "Please select a file");
             }
         },
         getErrors(err) {
