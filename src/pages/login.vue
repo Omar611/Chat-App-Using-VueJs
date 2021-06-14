@@ -1,30 +1,67 @@
 <template>
     <div>
-        <div class="jumbotron bg-primary text-white text-center">
-            <h2 class="lead display-4">#Slack with VueJs#</h2>
-            <p>Realtime communication at it's best</p>
-        </div>
-        <div class="alert alert-info" role="alert" v-if="loading">
-            <strong>Processing....</strong>
-        </div>
-        <div class="alert alert-danger" role="alert" v-if="hasErrors">
-            <strong v-for="error in errors" :key="error">{{ error }}</strong>
-        </div>
-        <div class="container-fluid">
-            <div class="row mt-5">
-                <div class="col text-center">
-                    <button
-                        class="btn btn-outline-danger btn-lg mx-2"
-                        @click="loginwithGoogle"
-                    >
-                        Login with Google
-                    </button>
-                    <button
-                        class="btn btn-outline-info btn-lg mx-2"
-                        @click="loginwithGithub"
-                    >
-                        Login with GitHub
-                    </button>
+        <div
+            class="
+                login-page
+                d-flex
+                justify-content-center
+                align-items-center
+                p-3
+            "
+        >
+            <div class="login-container bg-dark">
+                <div class="row">
+                    <div class="login-left col-lg-6"></div>
+                    <div class="login-right p-4 col-lg-6 text-center">
+                        <div class="row">
+                            <div class="col text-center">
+                                <div class="text-white text-center">
+                                    <h2 class="lead display-4">
+                                        #Slack with VueJs#
+                                    </h2>
+                                    <h4 class="mt-5">
+                                        Realtime communication at it's best
+                                    </h4>
+                                    <div
+                                        class="alert alert-info"
+                                        role="alert"
+                                        v-if="loading"
+                                    >
+                                        <strong>Processing....</strong>
+                                    </div>
+                                </div>
+                                <div
+                                    class="alert alert-danger"
+                                    role="alert"
+                                    v-if="hasErrors"
+                                >
+                                    <strong
+                                        v-for="error in errors"
+                                        :key="error"
+                                        >{{ error }}</strong
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col text-center mt-4">
+                            <div class="my-3">
+                                <button
+                                    class="btn btn-outline-danger btn-lg mx-2"
+                                    @click="loginwithGoogle"
+                                >
+                                    Login with Google
+                                </button>
+                            </div>
+                            <div class="my-3">
+                                <button
+                                    class="btn btn-outline-info btn-lg mx-2"
+                                    @click="loginwithGithub"
+                                >
+                                    Login with GitHub
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -90,3 +127,24 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.login-page {
+    background: #1d1c1d;
+    height: 100vh;
+}
+.login-container {
+    width: 750px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+.login-right {
+    padding: 30px;
+}
+.login-left {
+    background: url("../assets/images/login-hero.png");
+    background-position: 25%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+</style>
