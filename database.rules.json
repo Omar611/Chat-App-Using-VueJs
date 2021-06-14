@@ -1,6 +1,6 @@
 {
   "rules": {
-    
+
     "channels": {
       ".read": "auth != null",
         "$channelId": {
@@ -14,7 +14,7 @@
               }
         }
     },
-      
+
     "messages": {
       "$channelId": {
         ".read": "auth != null",
@@ -34,8 +34,8 @@
             }
       }
     },
-      
-      
+
+
     "privateMessages": {
       "$uid1": {
         "$uid2": {
@@ -56,13 +56,13 @@
         }
       }
     },
-    
+
       "presence": {
         ".read": "auth != null",
           ".write": "auth != null"
       },
-        
-        
+
+
     "users": {
       ".read": "auth != null",
       "$uid": {

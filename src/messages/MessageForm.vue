@@ -1,17 +1,27 @@
 <template>
     <div>
         <div class="messageForm">
+            <div class="progress">
+                <div
+                    class="
+                        progress-bar progress-bar-striped progress-bar-animated
+                    "
+                    role="progressbar"
+                >
+                    {{ uploadLabel }}
+                </div>
+            </div>
             <form @submit.prevent="sendMessage">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <span class="input-group-text mt-3">></span>
+                        <span class="input-group-text">></span>
                     </div>
                     <textarea
                         name="message"
                         id="message"
                         cols="15"
                         rows="1"
-                        class="form-control mt-3 write-message"
+                        class="form-control write-message"
                         placeholder="Don't be shy wirte something..."
                         v-model="message"
                         @keydown.enter.exact.prevent
@@ -89,7 +99,7 @@
                     <div class="input-group-append">
                         <button
                             type="button"
-                            class="btn btn-primary mt-3"
+                            class="btn btn-primary"
                             @click="sendMessage"
                             @keyup.16="sendMessage"
                         >
@@ -99,10 +109,11 @@
                     <div class="input-group-append">
                         <button
                             type="button"
-                            class="btn btn-warning mt-3"
+                            class="btn btn-warning"
                             data-toggle="fileUploadModal"
                             data-target="#fileUploadModal"
                             @click.prevent="openFileUploadModal"
+                            :disabled="uploadState == 'uploading'"
                         >
                             Upload
                         </button>
@@ -110,7 +121,8 @@
                 </div>
             </form>
         </div>
-        <file-modal />
+        <!-- file modal -->
+        <file-modal ref="file_modal" :errors="errors" @addError="addError" />
     </div>
 </template>
 
@@ -118,14 +130,18 @@
 import { mapGetters } from "vuex";
 import EmojiPicker from "vue-emoji-picker";
 import FileModal from "./FileModal";
+import storage from "firebase/storage";
 
 export default {
     name: "message-form",
     data() {
         return {
             message: "",
-            erros: [],
+            errors: [],
             search: "",
+            storageRef: firebase.storage().ref(),
+            uploadTask: null,
+            uploadState: null,
         };
     },
     components: {
@@ -134,39 +150,47 @@ export default {
     },
     computed: {
         ...mapGetters(["getCurrentUser", "getCurrentChannel", "isPrivate"]),
+        uploadLabel() {
+            switch (this.uploadState) {
+                case "uploading":
+                    return "Uploading...";
+                    break;
+                case "error":
+                    return "Error occured";
+                    break;
+                case "done":
+                    return "Upload completed";
+                    break;
+                default:
+                    return "";
+            }
+        },
     },
     methods: {
         sendMessage() {
-            // Construct message object
-            const newMessage = {
-                content: this.message.trim(),
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                user: {
-                    name: this.getCurrentUser.displayName,
-                    avatar: this.getCurrentUser.photoURL,
-                    id: this.getCurrentUser.uid,
-                },
-            };
             // Validation before pushing message
             if (this.getCurrentChannel !== null && this.message.length > 0) {
                 this.$parent
                     .getMessagesRef()
                     .child(this.getCurrentChannel.id)
                     .push()
-                    .set(newMessage)
+                    // .set(newMessage)
+                    .set(this.createMessage())
                     .then(() => {
-                        this.message = "";
                         this.$nextTick(() => {
                             this.scrollToLastMessage();
                         });
                     })
                     .catch((err) => {
-                        this.errors = err;
+                        this.errors.push(err.message);
                     });
+                this.message = "";
             }
         },
         scrollToLastMessage() {
-            var innerContainer = document.querySelector(".emoji-picker");
+            var innerContainer = document.querySelector(
+                ".inner-messages-container"
+            );
             innerContainer.scrollTop = innerContainer.scrollHeight;
         },
         insert(emoji) {
@@ -175,6 +199,106 @@ export default {
         openFileUploadModal() {
             $("#fileUploadModal").modal("show");
         },
+        createMessage(fileUrl = null) {
+            // create message object to push to firebase
+            let message = {
+                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                user: {
+                    name: this.getCurrentUser.displayName,
+                    avatar: this.getCurrentUser.photoURL,
+                    id: this.getCurrentUser.uid,
+                },
+            };
+
+            if (fileUrl == null) {
+                // either send message with content
+                message["content"] = this.message;
+            } else {
+                // or send the message with image
+                message["image"] = fileUrl;
+                $(".progress").hide();
+            }
+            return message;
+        },
+        uploadFile(file, metadata) {
+            if (file === null) return false;
+            const pathToUpload = this.getCurrentChannel.id;
+            const ref = this.$parent.getMessagesRef();
+            const filePath = this.getPath() + "/" + this.uniqueId() + ".jpg";
+
+            this.uploadTask = this.storageRef
+                .child(filePath)
+                .put(file, metadata);
+
+            this.uploadState = "uploading";
+
+            this.uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                    // Upload in progress
+                    const percentage =
+                        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    $(".progress").show();
+                    $(".progress-bar").css("width", percentage + "%");
+                },
+                (err) => {
+                    this.errors.push(err);
+                    this.uploadState = "error";
+                    this.uploadTask = null;
+                    // reset form
+                    this.$refs.file_modal.resetForm();
+                },
+                () => {
+                    // upload finished
+                    this.uploadState = "done";
+                    // reset form
+                    this.$refs.file_modal.resetForm();
+                    // recover the url of file
+                    const fileUrl = this.uploadTask.snapshot.ref
+                        .getDownloadURL()
+                        .then((fileUrl) => {
+                            this.sendFileMessage(fileUrl, ref, pathToUpload);
+                        });
+                }
+            );
+        },
+        sendFileMessage(fileUrl, ref, pathToUpload) {
+            ref.child(pathToUpload)
+                .push()
+                .set(this.createMessage(fileUrl))
+                .then(() => {
+                    this.$nextTick(() => {
+                        this.scrollToLastMessage();
+                    });
+                })
+                .catch((error) => {
+                    this.errors.push(error.message);
+                });
+        },
+        // Folder directory tostore files
+        getPath() {
+            if (this.isPrivate) {
+                return "chat/private/" + this.getCurrentChannel.id;
+            } else {
+                return "chat/public/" + this.getCurrentChannel.id;
+            }
+        },
+        uniqueId() {
+            return (
+                Math.random().toString(36).substr(2, 9) +
+                "_" +
+                Math.random().toString(36).substr(2, 9)
+            );
+        },
+        addError(err) {
+            this.errors.push(err);
+        },
+    },
+    beforeDestroy() {
+        if (this.uploadTask !== null) {
+            this.uploadTask.cancel();
+            this.uploadTask = null;
+        }
     },
 };
 </script>
@@ -280,6 +404,12 @@ svg.emoji-btn {
 .emoji-picker .emojis span:hover {
     background: #ececec;
     cursor: pointer;
+}
+.progress {
+    display: none;
+}
+.progress-bar {
+    height: 100%;
 }
 @media (min-width: 768px) {
     .messageForm {

@@ -17,10 +17,13 @@
                                 v-if="!selfMessage(message.user)"
                                 >{{ message.user.name }}</a
                             >
-                            <p class="m-0 d-inline-block text-primary" v-else>{{ message.user.name }}</p>
+                            <p class="m-0 d-inline-block text-primary" v-else>
+                                {{ message.user.name }}
+                            </p>
                             - {{ fromNow(message.timestamp) }}
                         </h6>
                         <p
+                            v-if="!isFile(message)"
                             class="m-0"
                             :class="{
                                 'self-message': selfMessage(message.user),
@@ -28,6 +31,16 @@
                         >
                             {{ message.content }}
                         </p>
+                        <img
+                            v-else
+                            :src="message.image"
+                            :class="{
+                                'self-message': selfMessage(message.user),
+                            }"
+                            class="img img-responsive pl-2"
+                            height="200px"
+                            alt="image"
+                        />
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -52,6 +65,9 @@ export default {
         },
         selfMessage(user) {
             return user.id === this.getCurrentUser.uid;
+        },
+        isFile(message) {
+            return message.content == null && message.image != null;
         },
         getChannelID(userId) {
             return userId < this.getCurrentUser.uid

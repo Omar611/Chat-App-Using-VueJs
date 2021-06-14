@@ -25,9 +25,9 @@
                     </div>
 
                     <div class="modal-body">
-                        <form>
+                        <form class="form">
                             <div class="input-group mb-3">
-                                <div class="custom-file">
+                                <!-- <div class="custom-file">
                                     <input
                                         type="file"
                                         name="file"
@@ -41,9 +41,31 @@
                                         for="inputGroupFile01"
                                         >Choose file</label
                                     >
-                                </div>
+                                </div> -->
+                                <input type="file" @change="addFile" />
                             </div>
                         </form>
+                        <div
+                            class="
+                                alert alert-danger alert-dismissible
+                                fade
+                                show
+                            "
+                            role="alert"
+                            v-for="(error, index) in errors"
+                            :key="index"
+                        >
+                            <button
+                                type="button"
+                                class="close"
+                                data-dismiss="alert"
+                                aria-label="Close"
+                            >
+                                <span aria-hidden="true">&times;</span>
+                                <span class="sr-only">Close</span>
+                            </button>
+                            <strong>{{ error }}</strong>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -69,20 +91,69 @@
 </template>
 
 <script>
+import mime from "mime-types";
+
 export default {
     name: "file-modal",
+    props: ["errors"],
     data() {
         return {
             file: null,
+            authorized: ["image/jpeg", "image/jpg", "image/png"],
         };
     },
     methods: {
-        addFile(e) {
-            //
+        isValid(filename) {
+            let index = this.authorized.indexOf(mime.lookup(filename));
+            return index !== -1;
         },
+
+        addFile(e) {
+            let files = e.target.files;
+            if (files.length === 1) {
+                this.file = files[0];
+            }
+        },
+
         sendFile() {
-            //
+            if (this.file !== null) {
+                if (this.isValid(this.file.name)) {
+                    const metadata = {
+                        contentType: mime.lookup(this.file.name),
+                    };
+                    this.$parent.uploadFile(this.file, metadata);
+                    $("#fileUploadModal").modal("hide");
+                } else {
+                    this.$emit(
+                        "addError",
+                        "File must be jpeg or png and 1mb max"
+                    );
+                }
+            } else {
+                this.$emit("addError", "File must be jpeg or png and 1mb max");
+            }
+        },
+        getErrors(err) {
+            this.erros = err;
+        },
+        // reset form
+        resetForm() {
+            $(".form").trigger("reset");
+            this.file = null;
         },
     },
 };
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
