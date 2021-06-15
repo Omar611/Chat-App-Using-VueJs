@@ -112,7 +112,17 @@
                     :class="{ 'bg-light text-dark': setActiveChannel(channel) }"
                     @click="changeChannel(channel)"
                 >
-                    <h5 class="m-0"># {{ channel.name }}</h5>
+                    <h5 class="m-0">
+                        # {{ channel.name }}
+                        <span
+                            class="badge badge-light float-right"
+                            v-if="
+                                getNotification(channel) &&
+                                channel.id != getCurrentChannel.id
+                            "
+                            >{{ getNotification(channel) }}</span
+                        >
+                    </h5>
                 </a>
             </div>
         </div>
@@ -122,6 +132,7 @@
 <script>
 import databse from "firebase/database";
 import { mapGetters } from "vuex";
+import mixin from "@/mixins";
 
 export default {
     name: "channel",
@@ -130,15 +141,25 @@ export default {
             new_channel: "",
             errors: [],
             channelsRef: firebase.database().ref("channels"),
+            messagesRef: firebase.database().ref("messages"),
+            notifCount: [],
             channels: [],
             currentChannel: null,
         };
     },
+    mixins: [mixin],
     computed: {
         hasErrors() {
             return this.errors.length > 0;
         },
-        ...mapGetters(["getCurrentChannel"]),
+        ...mapGetters(["getCurrentChannel", "isPrivate"]),
+    },
+    watch: {
+        isPrivate() {
+            if (this.isPrivate) {
+                this.resetNotifications();
+            }
+        },
     },
     methods: {
         addChannel() {
@@ -177,10 +198,15 @@ export default {
                     );
                     i++;
                 }
+                // Add count listener to notifications
+                this.addCountListener(snapshot.key);
             });
         },
         detachListeners() {
             this.channelsRef.off();
+            this.channels.forEach((ch) => {
+                this.messagesRef.child(ch.id).off();
+            });
         },
         setActiveChannel(ch) {
             return ch.id === this.getCurrentChannel.id;
@@ -189,6 +215,38 @@ export default {
             this.currentChannel = channel;
             this.$store.dispatch("setPrivate", false);
             this.$store.dispatch("setCurrentChannel", this.currentChannel);
+
+            // Reset notifications
+            this.resetNotifications();
+        },
+        resetNotifications() {
+            const index = this.notifCount.findIndex(
+                (el) => el.id == this.currentChannel.id
+            );
+            if (index !== -1) {
+                this.notifCount[index].total =
+                    this.notifCount[index].lastKnownTotal;
+                this.notifCount[index].notif = 0;
+            }
+        },
+        addCountListener(channelId) {
+            this.messagesRef.child(channelId).on("value", (snapshot) => {
+                this.handelNotifications(
+                    channelId,
+                    this.getCurrentChannel.id,
+                    this.notifCount,
+                    snapshot
+                );
+            });
+        },
+        getNotification(channel) {
+            let notif = 0;
+            this.notifCount.forEach((el) => {
+                if (el.id == channel.id) {
+                    notif = el.notif;
+                }
+            });
+            return notif;
         },
     },
     mounted() {
