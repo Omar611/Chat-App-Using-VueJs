@@ -16,7 +16,7 @@
             <div
                 class="navbar-brand col-md-3 col-lg-2 mr-0 px-4 hide-on-desktop"
             >
-                <h2 class="text-light text-right">#Slack with VueJs#</h2>
+                <h3 class="text-light text-center"><smal>#</smal>Slack with VueJs<smal>#</smal></h3>
             </div>
             <button
                 class="
