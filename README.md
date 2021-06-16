@@ -1,6 +1,6 @@
-# vue-chat
+# Vue Js Chat App
 
-<h2>A chat webapp with vue js, firebase and webpack</h2>
+<h2>A chat webapp with vue js and firebase (mimicking Slack)</h2>
 <br>
 
 > ### Checkpout the [Demo from here](https://slack-with-vuejs.web.app/)
